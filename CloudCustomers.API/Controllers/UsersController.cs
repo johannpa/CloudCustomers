@@ -14,7 +14,7 @@ namespace CloudCustomers.API.Controllers
         [HttpGet(Name = "GetUsers")]
         public async Task<IActionResult> Get()
         {
-            return null;
+            return Ok("all good");
         }
     }
 }
