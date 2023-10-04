@@ -26,12 +26,12 @@ namespace CloudCustomers.UnitTests.Systems.Controllers
         public async Task Get_OnSuccess_InvokesUserService()
         {
             // Arrange
-            var mockUserService = new Mock<IUsersService>();
+            var mockUsersService = new Mock<IUsersService>();
+            mockUsersService.Setup(service => service.GetAllUsers()).ReturnsAsync();
 
-            var sut = new UsersController(mockUserService.Object);
+            var sut = new UsersController(mockUsersService.Object);
 
             // Act
-            var result = (OkObjectResult)await sut.Get();
 
             // Assert
         }
