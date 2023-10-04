@@ -1,6 +1,8 @@
 using CloudCustomers.API.Controllers;
+using CloudCustomers.API.Services;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 
 namespace CloudCustomers.UnitTests.Systems.Controllers
 {
@@ -18,6 +20,20 @@ namespace CloudCustomers.UnitTests.Systems.Controllers
             // Assert
             result.StatusCode.Should().Be(200);
 
+        }
+
+        [Fact]
+        public async Task Get_OnSuccess_InvokesUserService()
+        {
+            // Arrange
+            var mockUserService = new Mock<IUsersService>();
+
+            var sut = new UsersController(mockUserService.Object);
+
+            // Act
+            var result = (OkObjectResult)await sut.Get();
+
+            // Assert
         }
     }
 }
