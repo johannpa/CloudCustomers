@@ -13,7 +13,11 @@ namespace CloudCustomers.UnitTests.Systems.Controllers
         public async Task Get_OnSuccess_ReturnsStatusCode200()
         {
             // Arrange
-            var sut = new UsersController();
+            var mockUsersService = new Mock<IUsersService>();
+            mockUsersService
+               .Setup(service => service.GetAllUsers())
+               .ReturnsAsync(new List<User>());
+            var sut = new UsersController(mockUsersService.Object);
 
             // Act
             var result = (OkObjectResult)await sut.Get();
@@ -24,7 +28,7 @@ namespace CloudCustomers.UnitTests.Systems.Controllers
         }
 
         [Fact]
-        public async Task Get_OnSuccess_InvokesUserService()
+        public async Task Get_OnSuccess_InvokesUserServiceExactlyOnce()
         {
             // Arrange
             var mockUsersService = new Mock<IUsersService>();
@@ -35,8 +39,10 @@ namespace CloudCustomers.UnitTests.Systems.Controllers
             var sut = new UsersController(mockUsersService.Object);
 
             // Act
+            var result = await sut.Get();
 
             // Assert
+            mockUsersService.Verify(service => service.GetAllUsers(), Times.Once);
         }
     }
 }
