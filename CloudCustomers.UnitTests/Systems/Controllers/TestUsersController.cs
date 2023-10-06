@@ -1,4 +1,5 @@
 using CloudCustomers.API.Controllers;
+using CloudCustomers.API.Models;
 using CloudCustomers.API.Services;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,9 @@ namespace CloudCustomers.UnitTests.Systems.Controllers
         {
             // Arrange
             var mockUsersService = new Mock<IUsersService>();
-            mockUsersService.Setup(service => service.GetAllUsers()).ReturnsAsync();
+            mockUsersService
+                .Setup(service => service.GetAllUsers())
+                .ReturnsAsync(new List<User>());
 
             var sut = new UsersController(mockUsersService.Object);
 
