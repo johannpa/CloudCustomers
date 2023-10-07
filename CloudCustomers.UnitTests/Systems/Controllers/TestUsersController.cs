@@ -64,5 +64,23 @@ namespace CloudCustomers.UnitTests.Systems.Controllers
             var objectResult = (OkObjectResult)result;
             objectResult.Value.Should().BeOfType<List<User>>();
         }
+
+        [Fact]
+        public async Task Get_OnNoUsersFound_Returns404()
+        {
+            // Arrange
+            var mockUsersService = new Mock<IUsersService>();
+            mockUsersService
+                .Setup(service => service.GetAllUsers())
+                .ReturnsAsync(new List<User>());
+
+            var sut = new UsersController(mockUsersService.Object);
+
+            // Act
+            var result = await sut.Get();
+
+            // Assert
+            result.Should().BeOfType<NotFoundResult>();
+        }
     }
 }
