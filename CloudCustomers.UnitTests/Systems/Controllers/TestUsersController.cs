@@ -16,7 +16,22 @@ namespace CloudCustomers.UnitTests.Systems.Controllers
             var mockUsersService = new Mock<IUsersService>();
             mockUsersService
                .Setup(service => service.GetAllUsers())
-               .ReturnsAsync(new List<User>());
+               .ReturnsAsync(new List<User>()
+                {
+                    new()
+                    {
+                        Id = 1,
+                        Name = "Jane",
+                        Address = new Address()
+                        {
+                            Street = "123 Main St",
+                            City = "New York",
+                            ZipCode = "53704"
+                        },
+                        Email = "jane@example.com"
+                    }
+                });
+
             var sut = new UsersController(mockUsersService.Object);
 
             // Act
@@ -95,6 +110,9 @@ namespace CloudCustomers.UnitTests.Systems.Controllers
 
             // Assert
             result.Should().BeOfType<NotFoundResult>();
+            var objectResult = (NotFoundResult)result;
+            objectResult.StatusCode.Should().Be(404);
         }
+
     }
 }
