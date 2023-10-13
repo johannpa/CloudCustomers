@@ -2,6 +2,8 @@
 using CloudCustomers.API.Services;
 using CloudCustomers.UnitTests.Fixtures;
 using CloudCustomers.UnitTests.Helpers;
+using Moq;
+using Moq.Protected;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +28,14 @@ namespace CloudCustomers.UnitTests.Systems.Services
 
             // Assert
             // Verify HTTP request is made !
-
-
+            handlerMock
+                .Protected()
+                .Verify(
+                    "SendAsync",
+                    Times.Exactly(1),
+                    ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get),
+                    ItExpr.IsAny<CancellationToken>()
+                );
         }
     }
 }
