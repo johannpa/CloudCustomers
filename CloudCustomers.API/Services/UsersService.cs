@@ -19,7 +19,14 @@ namespace CloudCustomers.API.Services
         {
             var usersResponse = await _httpClient.GetAsync("https://example.com");
 
-            return new List<User> { };
+            if(usersResponse.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return new List<User>();
+            }
+
+            var responseContent = usersResponse.Content;
+            var allUsers = await responseContent.ReadFromJsonAsync<List<User>>();
+            return allUsers.ToList();
         }
     }
 }
