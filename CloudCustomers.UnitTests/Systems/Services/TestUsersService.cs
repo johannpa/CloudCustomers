@@ -3,6 +3,8 @@ using CloudCustomers.API.Services;
 using CloudCustomers.UnitTests.Fixtures;
 using CloudCustomers.UnitTests.Helpers;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
 using System;
@@ -68,6 +70,29 @@ namespace CloudCustomers.UnitTests.Systems.Services
 
             // Assert
             result.Count.Should().Be(expectedResponse.Count);
+        }
+
+        [Fact]
+        public async Task GetAllUsers_WhenCalled_InvokesConfiguredExternalUrl()
+        {
+            // Arrange
+            var expectedResponse = UsersFixture.GetTestUsers();
+            var endpoint = "https://example.com/users";
+            var handlerMock = MockHttpMessageHandler<User>.SetupBasicGetRessourceList(expectedResponse, endpoint);
+            var httpClient = new HttpClient(handlerMock.Object);
+
+            var config = Options.Create(new UsersApiOptions
+            {
+                Endpoint = endpoint
+            });
+
+            var sut = new UsersService(httpClient, config);
+
+            // Act
+            var result = await sut.GetAllUsers();
+
+            // Assert
+
         }
     }
 }
